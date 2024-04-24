@@ -34,7 +34,7 @@ Make sure to:
 Once you have successfully connected your docker and github account, pull the image from Github packages.
 
 ```bash
-docker pull ghcr.io/sympoll/postgres-database/sympoll-db:{tag}
+docker pull ghcr.io/sympoll/postgres-database/sympoll-db:{TAG}
 ```
 
 ### Run a container instance
