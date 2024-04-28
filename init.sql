@@ -33,24 +33,30 @@ CREATE TABLE group_memberships (
 -- Poll Management Service Schema
 CREATE TABLE polls (
     poll_id SERIAL PRIMARY KEY,
-    title VARCHAR(255),
+    title VARCHAR(255) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    num_answers_allowed INT NOT NULL, 
+    creator_id INT REFERENCES users(user_id) NOT NULL,
+    group_id INT REFERENCES groups(group_id) NOT NULL,
+    time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    time_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    time_ends TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-CREATE TABLE questions (
-    question_id SERIAL PRIMARY KEY,
-    poll_id INT REFERENCES polls(poll_id),
-    question_text TEXT,
-    question_type VARCHAR(50)
 );
 
 CREATE TABLE answer_options (
-    option_id SERIAL PRIMARY KEY,
-    question_id INT REFERENCES questions(question_id),
-    option_text TEXT
+    answer_id SERIAL PRIMARY KEY,
+    poll_id INT REFERENCES polls(poll_id),
+    ordinal INT NOT NULL,
+    answer_text TEXT
 );
+
+-- CREATE TABLE questions (
+--     question_id SERIAL PRIMARY KEY,
+--     poll_id INT REFERENCES polls(poll_id),
+--     question_text TEXT,
+--     question_type VARCHAR(50)
+-- );
 
 CREATE TABLE voting_deadlines (
     deadline_id SERIAL PRIMARY KEY,
