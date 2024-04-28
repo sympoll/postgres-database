@@ -69,6 +69,6 @@ CREATE TABLE votes (
     vote_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id),
     poll_id INT REFERENCES polls(poll_id),
-    option_id INT REFERENCES answer_options(option_id),
+    answer_id INT REFERENCES answer_options(answer_id),
     vote_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
