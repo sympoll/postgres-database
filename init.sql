@@ -48,7 +48,8 @@ CREATE TABLE answer_options (
     answer_id SERIAL PRIMARY KEY,
     poll_id INT REFERENCES polls(poll_id),
     ordinal INT NOT NULL,
-    answer_text TEXT
+    answer_text TEXT,
+    num_of_votes INT
 );
 
 -- CREATE TABLE questions (
