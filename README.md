@@ -84,3 +84,4 @@ The following are schemas for each of the tables in the tables in the DB:
 - `poll_id` (INTEGER): The ID of the poll to which the answer option belongs.
 - `ordinal` (INTEGER): The ordinal position of the answer option.
 - `answer_text` (TEXT): The text of the answer option.
+- `num_of_votes` (INTEGER): The number of votes for the answer.
