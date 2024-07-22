@@ -35,13 +35,12 @@ CREATE TABLE polls (
     poll_id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    num_answers_allowed INT NOT NULL, 
-    creator_id INT REFERENCES users(user_id) NOT NULL,
-    group_id INT REFERENCES groups(group_id) NOT NULL,
+    num_answers_allowed INT NOT NULL,
+    creator_id INT,
+    group_id INT,
     time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_ends TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
 );
 
 CREATE TABLE answer_options (
@@ -58,7 +57,6 @@ CREATE TABLE answer_options (
 --     question_text TEXT,
 --     question_type VARCHAR(50)
 -- );
-
 CREATE TABLE voting_deadlines (
     deadline_id SERIAL PRIMARY KEY,
     poll_id INT REFERENCES polls(poll_id),
