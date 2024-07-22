@@ -36,8 +36,8 @@ CREATE TABLE polls (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     num_answers_allowed INT NOT NULL,
-    creator_id INT,
-    group_id INT,
+    creator_id INT REFERENCES users(user_id) NOT NULL,
+    group_id INT REFERENCES groups(group_id) NOT NULL,
     time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_ends TIMESTAMP DEFAULT CURRENT_TIMESTAMP
