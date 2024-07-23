@@ -1,4 +1,3 @@
-Copy code
 -- User Management Service Schema
 CREATE TABLE users (
     user_id UUID PRIMARY KEY,
