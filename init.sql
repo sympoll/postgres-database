@@ -13,9 +13,10 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE user_roles (
-    user_role_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
-    role_id UUID REFERENCES roles(role_id) ON DELETE CASCADE NOT NULL
+    group_id UUID PRIMARY KEY,
+    user_id UUID PRIMARY KEY,
+    role_id UUID REFERENCES roles(role_id) ON DELETE CASCADE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE NOT NULL
 );
 
 -- Group Management Service Schema
