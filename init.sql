@@ -13,9 +13,10 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE user_roles (
-    group_id UUID PRIMARY KEY,
-    user_id UUID PRIMARY KEY,
+    group_id UUID NOT NULL ,
+    user_id UUID NOT NULL,
     role_id UUID REFERENCES roles(role_id) ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (group_id, user_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE NOT NULL
 );
 
