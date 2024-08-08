@@ -23,12 +23,13 @@ CREATE TABLE user_roles (
 -- Group Management Service Schema
 CREATE TABLE groups (
     group_id VARCHAR(255) PRIMARY KEY,
-    group_name VARCHAR(255),
+    group_name VARCHAR(255)
 );
 
 CREATE TABLE group_memberships (
     user_id UUID REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
-    group_id VARCHAR(255) REFERENCES groups(group_id) ON DELETE CASCADE NOT NULL PRIMARY KEY (group_id, user_id),
+    group_id VARCHAR(255) REFERENCES groups(group_id) ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (group_id, user_id)
 );
 
 -- Poll Management Service Schema
@@ -55,7 +56,7 @@ CREATE TABLE voting_item_options (
 -- Voting Service Schema
 CREATE TABLE votes (
     vote_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
-    voting_item_id UUID REFERENCES voting_item_options(voting_item_id) ON DELETE CASCADE NOT NULL,
+    user_id UUID NOT NULL,
+    voting_item_id INT NOT NULL,
     vote_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
