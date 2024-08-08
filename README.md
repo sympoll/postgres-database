@@ -128,7 +128,7 @@ The `polls` table stores information about the different polls created within th
 #### Answer Options Table
 
 The `voting_item_options` table stores the different options available for voting in each poll.
-- `voting_item_id`: A unique identifier for each voting item (UUID, PRIMARY KEY).
+- `voting_item_id`: A unique identifier for each voting item (SERIAL, PRIMARY KEY).
 - `poll_id`: The identifier for the poll to which the voting item belongs (UUID, REFERENCES polls(poll_id)).
 - `ordinal`: The order of the voting item in the poll (INT).
 - `description`: The description of the voting item (TEXT).
@@ -141,5 +141,5 @@ The `voting_item_options` table stores the different options available for votin
 The `votes` table stores information about the votes cast by users.
 - `vote_id`: A unique identifier for each vote (UUID, PRIMARY KEY).
 - `user_id`: The identifier for the user who cast the vote (UUID, REFERENCES users(user_id) ON DELETE CASCADE, NOT NULL).
-- `voting_item_id`: The identifier for the voting item that was voted on (UUID, REFERENCES voting_item_options(voting_item_id) ON DELETE CASCADE, NOT NULL).
+- `voting_item_id`: The identifier for the voting item that was voted on (SERIAL, REFERENCES voting_item_options(voting_item_id) ON DELETE CASCADE, NOT NULL).
 - `vote_datetime`: The timestamp when the vote was cast (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
