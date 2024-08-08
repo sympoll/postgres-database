@@ -70,117 +70,76 @@ This repository contains the database schema for the User Management Service, Gr
 
 #### Users Table
 
-Stores information about the users of the system.
-
-- **user_id** (UUID): Unique identifier for each user. It is the primary key.
-- **username** (VARCHAR(255)): Unique username for the user. This field is required.
-- **password_hash** (VARCHAR(255)): Encrypted password for the user. This field is required.
-- **email** (VARCHAR(255)): Email address of the user. This field is optional.
-- **created_at** (TIMESTAMP): The timestamp when the user was created. Defaults to the current timestamp.
+The `users` table stores information about the users of the application.
+- `user_id`: A unique identifier for each user (UUID).
+- `username`: A unique username for each user (VARCHAR 255, NOT NULL).
+- `password_hash`: The hashed password for the user (VARCHAR 255, NOT NULL).
+- `email`: The email address of the user (VARCHAR 255).
+- `created_at`: The timestamp when the user was created (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
 
 #### Roles Table
 
-Stores different roles that can be assigned to users.
-
-- **role_id** (UUID): Unique identifier for each role. It is the primary key.
-- **role_name** (VARCHAR(50)): Name of the role. This field is unique and required.
+The `roles` table defines different roles that can be assigned to users.
+- `role_id`: A unique identifier for each role (UUID).
+- `role_name`: The name of the role (VARCHAR 50, UNIQUE, NOT NULL).
 
 #### User Roles Table
 
-Links users with roles.
-
-- **user_role_id** (UUID): Unique identifier for each user-role relationship. It is the primary key.
-- **user_id** (UUID): Foreign key referencing the `users` table. On delete, the associated user is also removed.
-- **role_id** (UUID): Foreign key referencing the `roles` table. On delete, the associated role is also removed.
+The `user_roles` table manages the many-to-many relationship between users and roles.
+- `group_id`: The identifier for the group to which the user belongs (VARCHAR 255, NOT NULL).
+- `user_id`: The identifier for the user (UUID, NOT NULL).
+- `role_id`: The identifier for the role (UUID, REFERENCES roles(role_id) ON DELETE CASCADE).
+- Primary Key: Combination of `group_id` and `user_id`.
+- Foreign Key: `user_id` references `users(user_id)` ON DELETE CASCADE.
+- Foreign Key: `group_id` references `groups(group_id)` ON DELETE CASCADE.
 
 ### Group Management Service Schema
 
 #### Groups Table
 
-Stores information about different groups.
-
-- **group_id** (UUID): Unique identifier for each group. It is the primary key.
-- **group_name** (VARCHAR(255)): Name of the group. This field is optional.
+The `groups` table stores information about the different groups within the application.
+- `group_id`: A unique identifier for each group (VARCHAR 255, PRIMARY KEY).
+- `group_name`: The name of the group (VARCHAR 255).
 
 #### Group Memberships Table
 
 Links users with groups.
 
-- **membership_id** (UUID): Unique identifier for each group-membership relationship. It is the primary key.
-- **user_id** (UUID): Foreign key referencing the `users` table. On delete, the associated user is also removed.
-- **group_id** (UUID): Foreign key referencing the `groups` table. On delete, the associated group is also removed.
+The `group_memberships` table manages the many-to-many relationship between users and groups.
+- `user_id`: The identifier for the user (UUID, REFERENCES users(user_id) ON DELETE CASCADE, NOT NULL).
+- `group_id`: The identifier for the group (VARCHAR 255, REFERENCES groups(group_id) ON DELETE CASCADE, NOT NULL).
+- Primary Key: Combination of `group_id` and `user_id`.
 
 ### Poll Management Service Schema
 
 #### Polls Table
 
-Stores information about polls.
-
-- **poll_id** (UUID): Unique identifier for each poll. It is the primary key.
-- **title** (VARCHAR(255)): Title of the poll.
-- **description** (TEXT): Description of the poll.
-- **num_answers_allowed** (INT): Number of answers allowed per poll.
-- **creator_id** (UUID): Foreign key referencing the `users` table. On delete, sets this field to NULL.
-- **group_id** (UUID): Foreign key referencing the `groups` table. On delete, sets this field to NULL.
-- **time_created** (TIMESTAMP): The timestamp when the poll was created. Defaults to the current timestamp.
-- **time_updated** (TIMESTAMP): The timestamp when the poll was last updated. Defaults to the current timestamp.
-- **deadline** (TIMESTAMP): The deadline for the poll.
+The `polls` table stores information about the different polls created within the application.
+- `poll_id`: A unique identifier for each poll (UUID, PRIMARY KEY).
+- `title`: The title of the poll (VARCHAR 255).
+- `description`: The description of the poll (TEXT).
+- `nof_answers_allowed`: The number of answers allowed for the poll (INT).
+- `creator_id`: The identifier for the user who created the poll (UUID).
+- `group_id`: The identifier for the group to which the poll belongs (VARCHAR 255).
+- `time_created`: The timestamp when the poll was created (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
+- `time_updated`: The timestamp when the poll was last updated (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
+- `deadline`: The deadline for the poll (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
 
 #### Answer Options Table
 
-Stores the possible answers for each poll.
-
-- **answer_id** (UUID): Unique identifier for each answer option. It is the primary key.
-- **poll_id** (UUID): Foreign key referencing the `polls` table. On delete, removes associated answer options.
-- **ordinal** (INT): The order of the answer option.
-- **answer_text** (TEXT): The text of the answer option.
-- **num_of_votes** (INT): The number of votes for this answer option.
-
-#### Voting Deadlines Table
-
-Stores deadlines related to voting.
-
-- **deadline_id** (SERIAL): Unique identifier for each voting deadline. It is the primary key.
-- **poll_id** (UUID): Foreign key referencing the `polls` table. On delete, removes associated deadlines.
-- **deadline_datetime** (TIMESTAMP): The date and time of the voting deadline.
+The `voting_item_options` table stores the different options available for voting in each poll.
+- `voting_item_id`: A unique identifier for each voting item (SERIAL, PRIMARY KEY).
+- `poll_id`: The identifier for the poll to which the voting item belongs (UUID, REFERENCES polls(poll_id)).
+- `ordinal`: The order of the voting item in the poll (INT).
+- `description`: The description of the voting item (TEXT).
+- `vote_count`: The number of votes received by the voting item (INT).
 
 ### Voting Service Schema
 
 #### Votes Table
 
-Stores the votes cast by users.
-
-- **vote_id** (UUID): Unique identifier for each vote. It is the primary key.
-- **user_id** (UUID): Foreign key referencing the `users` table. On delete, removes associated votes.
-- **answer_id** (UUID): Foreign key referencing the `answer_options` table. On delete, removes associated votes.
-- **vote_datetime** (TIMESTAMP): The timestamp when the vote was cast. Defaults to the current timestamp.
-
-### Indexes for Foreign Keys
-
-#### User Roles Indexes
-
-- **idx_user_roles_user_id**: Index on `user_id` for fast lookups in the `user_roles` table.
-- **idx_user_roles_role_id**: Index on `role_id` for fast lookups in the `user_roles` table.
-
-#### Group Memberships Indexes
-
-- **idx_group_memberships_user_id**: Index on `user_id` for fast lookups in the `group_memberships` table.
-- **idx_group_memberships_group_id**: Index on `group_id` for fast lookups in the `group_memberships` table.
-
-#### Polls Indexes
-
-- **idx_polls_creator_id**: Index on `creator_id` for fast lookups in the `polls` table.
-- **idx_polls_group_id**: Index on `group_id` for fast lookups in the `polls` table.
-
-#### Answer Options Index
-
-- **idx_answer_options_poll_id**: Index on `poll_id` for fast lookups in the `answer_options` table.
-
-#### Voting Deadlines Index
-
-- **idx_voting_deadlines_poll_id**: Index on `poll_id` for fast lookups in the `voting_deadlines` table.
-
-#### Votes Indexes
-
-- **idx_votes_user_id**: Index on `user_id` for fast lookups in the `votes` table.
-- **idx_votes_answer_id**: Index on `answer_id` for fast lookups in the `votes` table.
+The `votes` table stores information about the votes cast by users.
+- `vote_id`: A unique identifier for each vote (UUID, PRIMARY KEY).
+- `user_id`: The identifier for the user who cast the vote (UUID, REFERENCES users(user_id) ON DELETE CASCADE, NOT NULL).
+- `voting_item_id`: The identifier for the voting item that was voted on (SERIAL, REFERENCES voting_item_options(voting_item_id) ON DELETE CASCADE, NOT NULL).
+- `vote_datetime`: The timestamp when the vote was cast (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP).
